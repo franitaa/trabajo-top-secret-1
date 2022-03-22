@@ -26,18 +26,18 @@ class Binary16:
         if(self.d==other.d):
             vf1 = True
             print("Los números son iguales") #se supone que tiene q hacer esto la función?
-            else:
-                vf1 = False
-                print("Los números son distintos")
+        else:
+            vf1 = False
+            print("Los números son distintos")
         return vf1
 
     def __ne__(self, other):
         if(self.d!=other.d):
             vf2 = True
             print("Los números son distintos")
-            else:
-                vf2 = False
-                print("Los números son iguales")
+        else:
+            vf2 = False
+            print("Los números son iguales")
         return vf2
         
 
@@ -170,9 +170,9 @@ class Test(unittest.TestCase):
 
 def test():
     unittest.main()
+    
+#código principal
+numero1=input(float("Ingrese un número: "))
+numero2=input(float("Ingrese un número: "))
+print("El primer numero en binario es: ", Binary16.__init__(numero1.bits))
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    test()
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
