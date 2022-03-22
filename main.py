@@ -7,26 +7,34 @@ class Binary16:
     N_EXPONENTE = 5
     SESGO = 2**(Binary16.N_EXPONENTE) - 1
     def __init__(self, d):
-        print('Hola')
         self.d = d
         self.bits = Binary16.bin_to_dec(self.d)
 
-    def __mul__(self, other):
-        a = (self.d * other.d)
-        return Binary16(pasar_a_decimal(a))
+    def __mul__(self, other): #faltan todos los casos con problemas
+        producto = (self.d * other.d)
+        return Binary16(pasar_a_decimal(producto)) #dudas sobre a que se refiere esto
 
     def __divmod__(self, other):
-        pass
+        cociente = self.d/other.d
+        return Binary16(pasar_a_decimal(cociente))
 
     def __eq__(self, other):
-        pass
+        if(self.d==other.d):
+            print("Los números son iguales") #se supone que tiene q hacer esto la función?
+            else:
+                print("Los números son distintos")
+        return
 
     def __ne__(self, other):
-        pass
-
+        if(self.d!=other.d):
+            print("Los números son distintos")
+            else:
+                print("Los números son iguales")
+        return
+        
 
     @staticmethod
-    def bin_to_dec(numero):
+    def bin_to_dec(numero): #esto tiene un tab de mas?
         """
         Con un staticmethod no hace falta inicializar la clase para invocarlo
         Simplemente basta con hacer Binary16.bin_to_dec(numero)
@@ -82,7 +90,7 @@ class Test(unittest.TestCase):
         d = Binary16(0)
 
         self.assertEqual(d.d, 0)
-        self.asserEqual(d.bits, [0,0,0,0,0,0... etc])
+        self.asserEqual(d.bits, [0,0,0,0,0,0... etc]) #en esto hay q poner todo exacto
 
     def test_infinito(self):
         d = Binary16(99999999999)
