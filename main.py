@@ -8,35 +8,43 @@ class Binary16:
     SESGO = 2**(Binary16.N_EXPONENTE) - 1
     def __init__(self, d):
         self.d = d
-        self.bits = Binary16.bin_to_dec(self.d)
+        self.bits = Binary16.dec_to_bin(self.d)
 
-    def __mul__(self, other): #faltan todos los casos con problemas
-        producto = (self.d * other.d)
-        return Binary16(pasar_a_decimal(producto)) #dudas sobre a que se refiere esto
+    def __mul__(self, other): #faltan todos los casos con problemas: 
+        a = bin_to_dec(self.bits) 
+        b = bin_to_dec(other.bits)
+        producto = (a * b)
+        return Binary16(dec_to_bin(producto))
 
     def __divmod__(self, other):
-        cociente = self.d/other.d
-        return Binary16(pasar_a_decimal(cociente))
+        a = bin_to_dec(self.bits)
+        b = bin_to_dec(other.bits)
+        cociente = a/b
+        return Binary16(dec_to_bin(cociente))
 
     def __eq__(self, other):
+        vf = True
         if(self.d==other.d):
             print("Los números son iguales") #se supone que tiene q hacer esto la función?
             else:
+                vf = False
                 print("Los números son distintos")
-        return
+        return vf
 
     def __ne__(self, other):
+        vf = True
         if(self.d!=other.d):
             print("Los números son distintos")
             else:
+                vf = False
                 print("Los números son iguales")
-        return
+        return vf
         
 
     @staticmethod
-    def bin_to_dec(numero): #esto tiene un tab de mas?
+    def dec_to_bin(numero):
         """
-        Con un staticmethod no hace falta inicializar la clase para invocarlo
+        Con un staticmethod no hace falta inicializar la clase para invocarla
         Simplemente basta con hacer Binary16.bin_to_dec(numero)
         Otra opcion es no utilizar staticmethod y en vez de numero pasar self, y reemplzar
         cada aparicion de numero por self.d
@@ -81,7 +89,7 @@ class Binary16:
 class Test(unittest.TestCase):
 
     def __init__(self):
-        super()
+        super() #what is this
 
     def test_cero(self):
         """
