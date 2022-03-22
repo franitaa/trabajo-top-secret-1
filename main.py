@@ -5,7 +5,7 @@ class Binary16:
 
     PRECISION = 16
     N_EXPONENTE = 5
-    SESGO = 2**(Binary16.N_EXPONENTE) - 1
+    SESGO = 2**(Binary16.N_EXPONENTE-1) - 1
     def __init__(self, d):
         self.d = d
         self.bits = Binary16.dec_to_bin(self.d)
@@ -23,22 +23,22 @@ class Binary16:
         return Binary16(dec_to_bin(cociente))
 
     def __eq__(self, other):
-        vf = True
         if(self.d==other.d):
+            vf1 = True
             print("Los números son iguales") #se supone que tiene q hacer esto la función?
             else:
-                vf = False
+                vf1 = False
                 print("Los números son distintos")
-        return vf
+        return vf1
 
     def __ne__(self, other):
-        vf = True
         if(self.d!=other.d):
+            vf2 = True
             print("Los números son distintos")
             else:
-                vf = False
+                vf2 = False
                 print("Los números son iguales")
-        return vf
+        return vf2
         
 
     @staticmethod
@@ -53,17 +53,19 @@ class Binary16:
         """
         bits=[0]*Binary16.PRECISION
         mantisa=0
+        signo=1
+        numero=math.copysign(signo,d)
         if numero<0 :
             bits[0]=1
-            numero*=-1
-        if numero>6.55e4 : #marcamos el limite para infinito
+            d*=-1
+        if d>6.55e4 : #marcamos el limite para infinito
             for i in range(1,6):
                 bits[i]=1
-        elif numero<6.103e-5: #marcamos el limite para subnormal
-            mantisa=numero/2**(1-sesgo)
+        elif d<6.103e-5: #marcamos el limite para subnormal
+            mantisa=d/2**(1-sesgo)
         else: #numeros normales
             pot=-14
-            while numero//2**pot>2:
+            while d//2**pot>2:
               pot+=1
             exp=sesgo+pot
             exponente=exp
@@ -76,7 +78,7 @@ class Binary16:
                 else:
                   bits[m]=0
                 l-=1
-            mantisa=(d/(2**(exponente-sesgo)))-1
+            mantisa=(d/(2**(exponente-sesgo)))-1 
         for j in range(6,16) :
             mantisa*=2
             if (mantisa>=1):
@@ -84,7 +86,48 @@ class Binary16:
                 mantisa-=1
             else:
                 bits[j]=0
-
+        n=15
+        if (mantisa>0.5):
+            while (n>=1):
+                if bits[n]==1:
+                    bits[n]=0
+                else:
+                    bits[n]=1
+                    break
+                n-=1
+        if(str(d)=="nan"):
+          bits=[1]*16
+        return bits
+                
+                
+    def bin_to_dec(bits):
+      if 0 in bits[1:6]:
+        I=False
+        N=False
+      elif 1 in bits[6:16]:
+        N=True
+        I=False
+        d=float("Nan")
+      else:
+        N=False
+        I=True
+        d=float("Inf")
+      if not (N or I):
+        if 1 in bits[1:6]:
+          m=1.0
+          e=0
+          for j in range(1,6):
+            e+=bits[j]*(2**(j-1))
+        else:
+          m=0.0
+          e=1
+        l=-1
+        for i in range(6,16):
+          m+=bits[i]*(2**l)
+          l-=1
+        d=m*2**(e-Binary16.SESGO)
+      d*=(-1)**bits[0]
+      return d
 
 class Test(unittest.TestCase):
 
