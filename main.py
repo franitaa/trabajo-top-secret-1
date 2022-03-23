@@ -20,12 +20,12 @@ class Binary16:
           Nan*n=Nan
           Inf*Inf=Inf
           """
-        a = bin_to_dec(self.bits) 
-        b = bin_to_dec(other.bits)
+        a = Binary16.bin_to_dec(self.bits) 
+        b = Binary16.bin_to_dec(other.bits)
         producto = (a * b)
-        return Binary16(dec_to_bin(producto))
-
-    def __divmod__(self, other):
+        return Binary16.dec_to_bin(producto)
+    
+    def __truediv__(self, other):
           """
           Probamos que:
           0/0= error
@@ -40,16 +40,16 @@ class Binary16:
           nan/inf=nan
           inf/nan=nan
           """
-          a = bin_to_dec(self.bits)
-          b = bin_to_dec(other.bits)
-          if(b==0):
+         a = Binary16.bin_to_dec(self.bits)
+         b = Binary16.bin_to_dec(other.bits)
+        if(b==0):
             if(a==inf or a==-inf): #deberiamos distinguir entre 0 y -0?
-              cociente = float(inf)
+                cociente = float(inf)
             else:
-              cociente = float(nan)
-          else:
+                cociente = float(nan)
+         else:
             cociente = a/b
-          return Binary16(dec_to_bin(cociente))
+         return Binary16.dec_to_bin(cociente)
 
     def __eq__(self, other):
         if(self.d==other.d):
