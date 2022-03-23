@@ -39,9 +39,11 @@ class Binary16:
           0/nan=nan
           nan/inf=nan
           inf/nan=nan
+          1/3
+          1/3 * 3 = 1?
           """
-         a = Binary16.bin_to_dec(self.bits)
-         b = Binary16.bin_to_dec(other.bits)
+        a = Binary16.bin_to_dec(self.bits)
+        b = Binary16.bin_to_dec(other.bits)
         if(b==0):
             if(a==inf or a==-inf): #deberiamos distinguir entre 0 y -0?
                 cociente = float(inf)
@@ -162,7 +164,7 @@ class Binary16:
 class Test(unittest.TestCase):
 
     def __init__(self):
-        super() #what is this
+        super().__init__() #what is this
 
     def test_cero(self):
         """
@@ -203,11 +205,21 @@ class Test(unittest.TestCase):
     def test_igualdad(self):
         a = Binary16(1)
         b = Binary(1)
+        self.assertEqual(a, b)
+        self.assertTrue(a==b)
         
-       
+    def test_limite_precision(self):
+        """
+        Test para verificar perdida/limite de precision
+        """
+        a = 1.202
+        b = 1.20
+        self.assertEqual(a, b)
 
 
 def test():
     unittest.main()
 
+if __name__ == '__main__':
+    test()
 
