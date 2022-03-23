@@ -1,4 +1,4 @@
-import math *
+import math
 import unittest
 
 class Binary16:
@@ -10,17 +10,46 @@ class Binary16:
         self.d = d
         self.bits = Binary16.dec_to_bin(self.d)
 
-    def __mul__(self, other): #faltan todos los casos con problemas: 
+    def __mul__(self, other):
+          """
+          Probamos que:
+          Nan*Nan=Nan
+          Nan*inf=Nan
+          Inf*0=Nan
+          INf*n=Inf
+          Nan*n=Nan
+          Inf*Inf=Inf
+          """
         a = bin_to_dec(self.bits) 
         b = bin_to_dec(other.bits)
         producto = (a * b)
         return Binary16(dec_to_bin(producto))
 
     def __divmod__(self, other):
-        a = bin_to_dec(self.bits)
-        b = bin_to_dec(other.bits)
-        cociente = a/b
-        return Binary16(dec_to_bin(cociente))
+          """
+          Probamos que:
+          0/0= error
+          inf/inf=nan
+          inf/0=error
+          0/inf=0
+          nan/nan=nan
+          n/nan=nan
+          nan/n=nan
+          nan/0=error
+          0/nan=nan
+          nan/inf=nan
+          inf/nan=nan
+          """
+          a = bin_to_dec(self.bits)
+          b = bin_to_dec(other.bits)
+          if(b==0):
+            if(a==inf or a==-inf): #deberiamos distinguir entre 0 y -0?
+              cociente = 0
+            else:
+              cociente=float(nan)
+          else:
+            cociente = a/b
+          return Binary16(dec_to_bin(cociente))
 
     def __eq__(self, other):
         if(self.d==other.d):
@@ -54,14 +83,14 @@ class Binary16:
         bits=[0]*Binary16.PRECISION
         mantisa=0
         signo=1
-        numero=math.copysign(signo,d)
-        if numero<0 :
+        numero=math.copysign(signo,d) #esta funcion nos permite distinguir entre +0 y -0
+        if numero<0 : 
             bits[0]=1
             d*=-1
         if d>6.55e4 : #marcamos el limite para infinito
             for i in range(1,6):
                 bits[i]=1
-        elif d<6.103e-5: #marcamos el limite para subnormal
+        elif d<6.103e-5 : #marcamos el limite para subnormal
             mantisa=d/2**(1-sesgo)
         else: #numeros normales
             pot=-14
@@ -128,7 +157,8 @@ class Binary16:
         d=m*2**(e-Binary16.SESGO)
       d*=(-1)**bits[0]
       return d
-
+    
+    
 class Test(unittest.TestCase):
 
     def __init__(self):
@@ -136,43 +166,48 @@ class Test(unittest.TestCase):
 
     def test_cero(self):
         """
-        Aca testeo una clase que es bonita
+        Aca testeo que la conversion del cero sea correcta
         """
         d = Binary16(0)
-
-        self.assertEqual(d.d, 0)
-        self.asserEqual(d.bits, [0,0,0,0,0,0... etc]) #en esto hay q poner todo exacto
+        expected = [0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        self.assertEqual(d.d, expected[0])
+        self.assertEqual(d.bits, expected[1]) #en esto hay q poner todo exacto
 
     def test_infinito(self):
-        d = Binary16(99999999999)
-
-        self.assertEqual(d.d, '+inf')
-        self.assertEqual(d.d, [111111111111])
+        """
+        Aca testeo que la conversion del +infinito sea correcta
+        """
+        d = Binary16(99999999999) #ingreso esto o directo inf?
+        expected = [inf , [0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        self.assertEqual(d.d, expected[0])
+        self.assertEqual(d.bits, expected[1])
 
     def test_minus_infinito(self):
-        d = Binary16(99999999999)
-
-        expected = [-inf , [1231231412414]]
+        d = Binary16(999999999999)
+        expected = [-inf , [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
         self.assertEqual(d.d, expected[0])
-        self.assertEqual(d.d, expected[1]))
+        self.assertEqual(d.bits, expected[1]))
 
-    def test_multiplication(self):
-        d = Binary16(1)
-        c = Binary16(2)
-
-        res = c*d
-
+    def test_multiplicacion(self): #siento q no estan bien estos tests, no estoy llamando a la funcion q quiero probar
+        a = Binary16(1)
+        b = Binary16(2)
+        res = a*b
         self.assertEqual(res.d, 2)
 
-    def test_mas_cosas(self):
-        pass
+    def test_division(self):
+        a = Binary16(1)
+        b = Binary16(2)
+        res = a/b
+        self.assertEqual(res.d, 0.5)
+        
+    def test_igualdad(self):
+        a = Binary16(1)
+        b = Binary(1)
+        
+       
 
 
 def test():
     unittest.main()
-    
-#código principal
-numero1=input(float("Ingrese un número: "))
-numero2=input(float("Ingrese un número: "))
-print("El primer numero en binario es: ", Binary16.__init__(numero1.bits))
+
 
