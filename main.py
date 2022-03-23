@@ -44,9 +44,9 @@ class Binary16:
           b = bin_to_dec(other.bits)
           if(b==0):
             if(a==inf or a==-inf): #deberiamos distinguir entre 0 y -0?
-              cociente = 0
+              cociente = float(inf)
             else:
-              cociente=float(nan)
+              cociente = float(nan)
           else:
             cociente = a/b
           return Binary16(dec_to_bin(cociente))
